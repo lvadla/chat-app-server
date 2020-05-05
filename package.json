@@ -1,0 +1,15 @@
+{
+  "name": "react-chat-app-server",
+  "version": "1.0.0",
+  "description": "websocket server for react-chat-app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lance Vadla",
+  "license": "ISC",
+  "dependencies": {
+    "websocket": "^1.0.31",
+    "ws": "^7.2.5"
+  }
+}
