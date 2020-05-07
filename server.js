@@ -15,7 +15,7 @@ server.listen(port, function () {
 
 wss.on('connection', function (ws) {
   console.log(`peer has connected!`);
-  const clientIndex = clients.push({ socket: ws, userName: null }) - 1;
+  let clientIndex;
 
   // the newly connected user should be synced
   // with the chat room's message history
@@ -31,8 +31,10 @@ wss.on('connection', function (ws) {
     const parsedData = JSON.parse(data);
 
     if (parsedData.type === 'identification') {
-      clients[clientIndex].userName = parsedData.userName;
+      const newClient = { socket: ws, userName: parsedData.userName };
+      clientIndex = clients.push(newClient) - 1;
       staticBroadcast(`${parsedData.userName} joined.`)
+      syncClients('clients', clients.map(client => client.userName));
 
     } else if (parsedData.type === 'edit') {
       history[parsedData.index] = {
@@ -68,6 +70,7 @@ wss.on('connection', function (ws) {
     if (clients[clientIndex]) {
       staticBroadcast(`${clients[clientIndex].userName} left.`);
       clients.splice(clientIndex, 1);
+      syncClients('clients', clients.map(client => client.userName));
     }
   });
 
